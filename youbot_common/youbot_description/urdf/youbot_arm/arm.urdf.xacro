@@ -4,6 +4,10 @@
         xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
         xmlns:xacro="http://ros.org/wiki/xacro">
 
+
+	<!-- sensors -->
+	<include filename="$(find youbot_description)/urdf/sensors/hokuyo_urg04_laser.urdf.xacro"/>
+
 	<include filename="$(find youbot_description)/urdf/youbot_arm/arm.gazebo.xacro" />
 	<include filename="$(find youbot_description)/urdf/youbot_arm/arm.transmission.xacro" />
         <include filename="$(find youbot_description)/urdf/youbot_arm/limits.urdf.xacro" />
@@ -204,7 +208,8 @@
 				</geometry>
 			</collision>
 		</link>
-
+		
+		
 		<!-- joint between arm_4_link and arm_5_link -->
 		<joint name="${name}_joint_5" type="revolute">
 			<origin xyz="-0.002 0 0.130" rpy="0 0 ${167.5 * M_PI / 180}" />
@@ -216,6 +221,7 @@
 			<limit effort="1" velocity="${M_PI / 2.0}" lower="0" upper="${joint_5_limit}" />
                         <safety_controller k_position="20" k_velocity="100" soft_lower_limit="0" soft_upper_limit="${joint_5_limit_soft}" />
 		</joint>
+
 
 		<link name="${name}_link_5">
 			<inertial>
@@ -239,6 +245,10 @@
 				</geometry>
 			</collision>
 		</link>
+
+		<xacro:hokuyo_urg04_laser name="${name}_laser_front" parent="${name}_link_5"  ros_topic="scan_from_arm" update_rate="10" min_angle="-2.09" max_angle="2.09" >
+     			 <origin xyz="-0.060 0 0.0038" rpy="0 -${M_PI/2.0} 0" />
+    		</xacro:hokuyo_urg04_laser>
 
 		<!-- extensions -->
 		<xacro:youbot_arm_gazebo name="${name}" />
